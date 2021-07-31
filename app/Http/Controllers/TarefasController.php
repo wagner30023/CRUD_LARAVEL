@@ -29,23 +29,49 @@ class TarefasController extends Controller
 
             return redirect()->route('tarefas.list');
         }else{
-
+            return redirect()
+                ->route('tarefas.add')
+                ->with('warning','Você não preencheu o título');
         }
     } 
 
-    public function edit(){
-        return view('tarefas.edit');
-    }
-
-    public function editAction(Request $id){
-        $titulo = $id->get('titulo');
-
-        DB::edit('UPDATE tarefas SET titulo = :titulo WHERE id = :id',[
-            'titulo' => $titulo,
+    public function edit($id){
+        $data = DB::select('SELECT * FROM tarefas WHERE id = :id',[
+            'id' => $id
         ]);
 
-        return redirect()->route('tarefas.list');
+        if(count($data) > 0){
+            return view('tarefas.edit',[
+                'data' => $data[0]
+            ]);
+        } else {
+            return redirect()->route('tarefas.list');
+        }
     }
+
+    public function editAction(Request $request,$id){
+        if($request->filled('titulo')){
+
+            $titulo = $request->input('titulo');
+            $data = DB::select('SELECT * FROM tarefas WHERE id = :id',[
+                'id' => $id
+            ]);
+    
+            if(count($data) > 0){
+                DB::update('UPDATE tarefas SET titulo = :titulo WHERE id = :id',[
+                    'id' => $id,
+                    'titulo' => $titulo
+                ]);
+            } 
+
+            return redirect()->route('tarefas.list');
+        } else {
+            return redirect()
+                ->route('tarefas.edit',['id' => $id])
+                ->with('warning','Você não preencheu o título');
+            }
+    }
+    
 
     public function del(){
 

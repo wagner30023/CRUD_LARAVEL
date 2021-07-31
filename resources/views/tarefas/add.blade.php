@@ -4,12 +4,12 @@
 
 @section('content')
     <h1> Adição </h1>
-{{-- 
-    @component('components.alert')
-        @slot('type')
-            Erro:
-        @endslot
-    @endcomponent --}}
+
+    @if(session('warning'))
+        @alert
+            {{ session('warning') }}
+        @endalert
+    @endif
 
     <br/>
 

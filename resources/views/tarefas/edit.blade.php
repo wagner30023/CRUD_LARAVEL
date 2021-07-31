@@ -3,20 +3,24 @@
 @section('title','Edição de Tarefas')
 
 @section('content')
-    <h1 href="{{ route('tarefas.edit')}}"> Edição </h1>
+    <h1 href=""> Edição </h1>
     <br/>
 
-    <form method="post">
+    @if(session('warning'))
+        @alert
+            {{ session('warning') }}
+        @endalert
+    @endif
+
+    <form method="POST">
         @csrf
         
         <label>
             Titulo: <br/><br/>
-            <input type="text" name="{{$titulo ?? ''}}" />
-            <input type="submit" value="Editar" />
+            <input type="text" name="titulo" value="{{ $data->titulo }}" />
         </label>
+        <input type="submit" value="Editar" />
     </form>
-    <br/>
-        <a href="/config/info"> Informações </a>
     <br/>
     <br/>
 @endsection
