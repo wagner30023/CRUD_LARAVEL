@@ -19,20 +19,18 @@ class TarefasController extends Controller
     }
 
     public function addAction(Request $request){
-        //  filled: verifica se o post está preenhcido
-        if($request->filled('titulo')){
-            $titulo = $request->input('titulo');
-            // dd($titulo);
-            DB::insert('INSERT INTO tarefas (titulo) VALUES (:titulo)',[
-                'titulo' => $titulo 
-            ]);
+        //  filled: verifica se o post está preenchido.
 
-            return redirect()->route('tarefas.list');
-        }else{
-            return redirect()
-                ->route('tarefas.add')
-                ->with('warning','Você não preencheu o título');
-        }
+        $request->validate([
+            'titulo' => ['required','string']
+        ]);
+
+        $titulo = $request->input('titulo');
+        DB::insert('INSERT INTO tarefas (titulo) VALUES (:titulo)',[
+            'titulo' => $titulo 
+        ]);
+
+        return redirect()->route('tarefas.list');
     } 
 
     public function edit($id){
@@ -50,26 +48,24 @@ class TarefasController extends Controller
     }
 
     public function editAction(Request $request,$id){
-        if($request->filled('titulo')){
+        $request->validate([
+            'titulo' => ['required','string']
+        ]);
 
-            $titulo = $request->input('titulo');
-            $data = DB::select('SELECT * FROM tarefas WHERE id = :id',[
-                'id' => $id
-            ]);
+        $titulo = $request->input('titulo');
+        $data = DB::select('SELECT * FROM tarefas WHERE id = :id',[
+            'id' => $id
+        ]);
     
-            if(count($data) > 0){
-                DB::update('UPDATE tarefas SET titulo = :titulo WHERE id = :id',[
-                    'id' => $id,
-                    'titulo' => $titulo
-                ]);
-            } 
+        if(count($data) > 0){
+            DB::update('UPDATE tarefas SET titulo = :titulo WHERE id = :id',[
+                'id' => $id,
+                'titulo' => $titulo
+            ]);
+        } 
 
-            return redirect()->route('tarefas.list');
-        } else {
-            return redirect()
-                ->route('tarefas.edit',['id' => $id])
-                ->with('warning','Você não preencheu o título');
-            }
+        return redirect()->route('tarefas.list');
+        
     }
     
 

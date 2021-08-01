@@ -6,11 +6,15 @@
     <h1 href=""> Edição </h1>
     <br/>
 
-    @if(session('warning'))
+    @if ($errors->any())
         @alert
-            {{ session('warning') }}
+            @foreach($errors->all() as $error)
+                {{ $error }}
+            @endforeach
         @endalert
     @endif
+
+    <br/>
 
     <form method="POST">
         @csrf

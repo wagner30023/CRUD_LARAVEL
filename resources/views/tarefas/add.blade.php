@@ -5,9 +5,11 @@
 @section('content')
     <h1> Adição </h1>
 
-    @if(session('warning'))
+    @if ($errors->any())
         @alert
-            {{ session('warning') }}
+            @foreach($errors->all() as $error)
+                {{ $error }}
+            @endforeach
         @endalert
     @endif
 
